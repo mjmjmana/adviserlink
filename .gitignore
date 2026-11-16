@@ -1,0 +1,31 @@
+# Secrets and local configuration
+**/.env
+**/.env.*
+!**/.env.example
+**/.jwt_secret
+**/key.properties
+**/*.jks
+**/*.keystore
+
+# Local Python environments and generated files
+**/venv/
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+
+# Frontend and Flutter build artifacts
+**/node_modules/
+web/dist/
+mobile/build/
+mobile/.dart_tool/
+mobile/.flutter-plugins*
+mobile/android/.gradle/
+mobile/android/local.properties
+
+# Runtime data, logs, backups, and packaged releases
+backend/uploads/
+*.log
+adviserlink_full_*.sql
+*.sql.sha256
+*.apk

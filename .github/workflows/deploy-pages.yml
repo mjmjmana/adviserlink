@@ -1,0 +1,85 @@
+name: Deploy web and mobile to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy-pages.yml"
+      - "web/**"
+      - "mobile/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build React web app
+        working-directory: web
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+          VITE_API_BASE_URL: ${{ vars.API_BASE_URL }}
+          VITE_BASE_PATH: /adviserlink/
+        run: |
+          if [ -z "$API_BASE_URL" ]; then
+            echo "Set the repository Actions variable API_BASE_URL to the HTTPS API origin." >&2
+            exit 1
+          fi
+          node -e 'const u = new URL(process.env.API_BASE_URL); if (u.protocol !== "https:" || u.pathname !== "/" || u.search || u.hash) process.exit(1)'
+          npm install --no-audit --no-fund
+          npm run build
+          cp dist/index.html dist/404.html
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-dependency-path: mobile/pubspec.yaml
+
+      - name: Build mobile web app
+        working-directory: mobile
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+        run: |
+          flutter pub get
+          flutter build web --release \
+            --base-href /adviserlink/mobile/ \
+            --dart-define=API_BASE_URL="$API_BASE_URL"
+          mkdir -p ../web/dist/mobile
+          cp -R build/web/. ../web/dist/mobile/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

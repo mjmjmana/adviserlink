@@ -1,0 +1,49 @@
+name: adviserlink
+description: "AdviserLink student app (Flutter) - kumakausap sa parehong Python API ng web."
+publish_to: "none"
+version: 0.2.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.0
+  file_picker: ^8.1.7
+  shared_preferences: ^2.2.0
+  intl: ^0.19.0
+  image_picker: ^1.0.7
+  path_provider: ^2.1.2
+  permission_handler: ^11.3.0
+  flutter_local_notifications: ^17.2.2
+  timezone: ^0.9.2
+  cached_network_image: ^3.3.1
+  pull_to_refresh: ^2.0.0
+  shimmer: ^3.0.0
+  url_launcher: ^6.2.5
+  package_info_plus: ^8.0.0
+  device_info_plus: ^10.1.0
+  provider: ^6.1.1
+  audioplayers: ^6.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/logo.png
+    - assets/adviserlink-logo.png
+    - assets/adviserlink-research-team.png
+    - assets/sounds/elegant-notification-sound.ogg
+    - assets/sounds/booking-alarm.mp3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/adviserlink-logo.png"
+  min_sdk_android: 21

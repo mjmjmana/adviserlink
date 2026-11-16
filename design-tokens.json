@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "AdviserLink Design Tokens",
+  "version": "2.0.0",
+  "description": "Single source of truth for colors, spacing, typography, radius, shadows - consumed by both Web (Tailwind) and Mobile (Flutter)",
+  "color": {
+    "brand": {
+      "primary": { "value": "#6D2180", "hsl": "286 59% 32%" },
+      "primaryHover": { "value": "#3F0F52", "hsl": "283 69% 19%" },
+      "primaryLight": { "value": "#D8C4E8", "hsl": "274 42% 84%" },
+      "primaryDark": { "value": "#3F0F52", "hsl": "283 69% 19%" },
+      "deep": { "value": "#3F0F52", "hsl": "283 69% 19%" },
+      "lavender": { "value": "#D8C4E8", "hsl": "274 42% 84%" },
+      "pink": { "value": "#C2186E", "hsl": "330 73% 43%" }
+    },
+    "semantic": {
+      "dark": {
+        "surface": { "value": "#0D0D0D", "hsl": "220 13% 5%" },
+        "surfaceElevated": { "value": "#1A1A1A", "hsl": "220 13% 10%" },
+        "surfaceHover": { "value": "#262626", "hsl": "220 13% 15%" },
+        "text": { "value": "#FAFAFA", "hsl": "210 40% 98%" },
+        "textMuted": { "value": "#A1A1AA", "hsl": "215 20% 65%" },
+        "border": { "value": "#3A3A3A", "hsl": "220 13% 22%" },
+        "input": { "value": "#1A1A1A", "hsl": "220 13% 10%" },
+        "ring": { "value": "#B45BC4", "hsl": "286 59% 58%" }
+      },
+      "light": {
+        "surface": { "value": "#FFFFFF", "hsl": "0 0% 100%" },
+        "surfaceElevated": { "value": "#F8F8F8", "hsl": "0 0% 98%" },
+        "surfaceHover": { "value": "#F0F0F0", "hsl": "0 0% 94%" },
+        "text": { "value": "#1A1A2E", "hsl": "222 47% 11%" },
+        "textMuted": { "value": "#52525B", "hsl": "215 16% 47%" },
+        "border": { "value": "#E4E4E7", "hsl": "214 32% 91%" },
+        "input": { "value": "#F5F5F5", "hsl": "0 0% 96%" },
+        "ring": { "value": "#6D2180", "hsl": "286 59% 32%" }
+      }
+    },
+    "status": {
+      "success": { "value": "#16A34A", "hsl": "142 76% 36%", "light": "#DCFCE7", "dark": "#14532D" },
+      "warning": { "value": "#F59E0B", "hsl": "45 93% 47%", "light": "#FEF3C7", "dark": "#78350F" },
+      "error": { "value": "#EF4444", "hsl": "0 84% 60%", "light": "#FEE2E2", "dark": "#7F1D1D" },
+      "info": { "value": "#3B82F6", "hsl": "217 91% 60%", "light": "#DBEAFE", "dark": "#1E3A5F" }
+    },
+    "role": {
+      "student": { "value": "#3B82F6", "light": "#DBEAFE", "dark": "#1E3A5F" },
+      "adviser": { "value": "#8B5CF6", "light": "#EDE9FE", "dark": "#3C1F6E" },
+      "admin": { "value": "#EF4444", "light": "#FEE2E2", "dark": "#7F1D1D" }
+    },
+    "tile": {
+      "orange": { "value": "#6D2180", "light": "#D8C4E8", "dark": "#3F0F52", "bgLight": "#D8C4E8", "bgDark": "rgba(109,33,128,0.12)" },
+      "amber": { "value": "#F59E0B", "light": "#FEF3C7", "dark": "#3D2E0A", "bgLight": "#FEF3C7", "bgDark": "rgba(245,158,11,0.12)" },
+      "coral": { "value": "#F97316", "light": "#FFEDD5", "dark": "#3D1F0A", "bgLight": "#FFEDD5", "bgDark": "rgba(249,115,22,0.12)" },
+      "peach": { "value": "#FDBA74", "light": "#FFF7ED", "dark": "#3D260A", "bgLight": "#FFF7ED", "bgDark": "rgba(253,186,116,0.12)" },
+      "blue": { "value": "#3B82F6", "light": "#DBEAFE", "dark": "#1E3A5F", "bgLight": "#DBEAFE", "bgDark": "rgba(59,130,246,0.12)" },
+      "purple": { "value": "#8B5CF6", "light": "#EDE9FE", "dark": "#3C1F6E", "bgLight": "#EDE9FE", "bgDark": "rgba(139,92,246,0.12)" },
+      "green": { "value": "#16A34A", "light": "#DCFCE7", "dark": "#14532D", "bgLight": "#DCFCE7", "bgDark": "rgba(22,163,74,0.12)" },
+      "rose": { "value": "#F43F5E", "light": "#FFE4E6", "dark": "#4C1D2A", "bgLight": "#FFE4E6", "bgDark": "rgba(244,63,94,0.12)" }
+    },
+    "background": {
+      "light": {
+        "primary": "radial-gradient(55rem 38rem at 92% -8%, hsl(286 59% 32% / 0.08), transparent 58%), radial-gradient(48rem 38rem at -8% 18%, hsl(274 42% 84% / 0.38), transparent 58%), radial-gradient(42rem 30rem at 65% 112%, hsl(330 73% 43% / 0.05), transparent 55%), radial-gradient(30rem 24rem at 18% 82%, hsl(286 59% 32% / 0.045), transparent 50%)",
+        "secondary": "hsl(0 0% 100%)"
+      },
+      "dark": {
+        "primary": "radial-gradient(60rem 40rem at 95% -10%, hsl(286 59% 58% / 0.18), transparent 60%), radial-gradient(50rem 40rem at -10% 20%, hsl(220 50% 15% / 0.3), transparent 60%), radial-gradient(45rem 35rem at 65% 115%, hsl(286 59% 58% / 0.12), transparent 60%)",
+        "secondary": "hsl(220 13% 5%)"
+      }
+    }
+  },
+  "spacing": {
+    "0": "0",
+    "1": "0.25rem",
+    "2": "0.5rem",
+    "3": "0.75rem",
+    "4": "1rem",
+    "5": "1.25rem",
+    "6": "1.5rem",
+    "8": "2rem",
+    "10": "2.5rem",
+    "12": "3rem",
+    "16": "4rem"
+  },
+  "spacingPx": {
+    "1": 4,
+    "2": 8,
+    "3": 12,
+    "4": 16,
+    "5": 20,
+    "6": 24,
+    "8": 32,
+    "10": 40,
+    "12": 48,
+    "16": 64
+  },
+  "radius": {
+    "none": "0",
+    "sm": "0.25rem",
+    "md": "0.5rem",
+    "lg": "0.75rem",
+    "xl": "1rem",
+    "2xl": "1.25rem",
+    "3xl": "1.5rem",
+    "4xl": "1.75rem",
+    "full": "9999px"
+  },
+  "radiusPx": {
+    "none": 0,
+    "sm": 4,
+    "md": 8,
+    "lg": 12,
+    "xl": 16,
+    "2xl": 20,
+    "3xl": 24,
+    "4xl": 28,
+    "full": 9999
+  },
+  "typography": {
+    "fontFamily": {
+      "sans": "Inter, system-ui, -apple-system, sans-serif",
+      "mono": "JetBrains Mono, Consolas, monospace"
+    },
+    "fontSize": {
+      "xs": { "size": "0.75rem", "lineHeight": "1rem" },
+      "sm": { "size": "0.875rem", "lineHeight": "1.25rem" },
+      "base": { "size": "1rem", "lineHeight": "1.5rem" },
+      "lg": { "size": "1.125rem", "lineHeight": "1.75rem" },
+      "xl": { "size": "1.25rem", "lineHeight": "1.75rem" },
+      "2xl": { "size": "1.5rem", "lineHeight": "2rem" },
+      "3xl": { "size": "1.875rem", "lineHeight": "2.25rem" },
+      "4xl": { "size": "2.25rem", "lineHeight": "2.5rem" },
+      "5xl": { "size": "3rem", "lineHeight": "3.25rem" }
+    },
+    "fontWeight": {
+      "normal": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700,
+      "extrabold": 800
+    }
+  },
+  "shadows": {
+    "none": "none",
+    "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+    "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+    "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+    "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+    "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
+    "glow": "0 0 20px -5px hsl(var(--brand) / 0.4)",
+    "card": "0 2px 8px -2px rgb(0 0 0 / 0.15), 0 0 0 1px rgb(0 0 0 / 0.05)",
+    "bento": "0 20px 50px -10px rgb(0 0 0 / 0.25), 0 0 0 1px rgb(0 0 0 / 0.05), 0 0 60px -20px hsl(var(--brand) / 0.15)",
+    "cardGlass": "0 4px 20px -4px rgb(0 0 0 / 0.15), 0 0 0 1px rgb(255 255 255 / 0.08)",
+    "tileGlow": "0 0 30px -10px hsl(var(--brand) / 0.3)"
+  },
+  "shadowsFlutter": {
+    "none": [],
+    "sm": [{ "color": "0x0D000000", "offset": { "x": 0, "y": 1 }, "blurRadius": 2 }],
+    "md": [{ "color": "0x1A000000", "offset": { "x": 0, "y": 4 }, "blurRadius": 6, "spreadRadius": -1 }],
+    "lg": [{ "color": "0x1A000000", "offset": { "x": 0, "y": 10 }, "blurRadius": 15, "spreadRadius": -3 }],
+    "card": [
+      { "color": "0x26000000", "offset": { "x": 0, "y": 2 }, "blurRadius": 8, "spreadRadius": -2 },
+      { "color": "0x0D000000", "offset": { "x": 0, "y": 0 }, "blurRadius": 0, "spreadRadius": 1 }
+    ],
+    "glow": [{ "color": "0x666D2180", "offset": { "x": 0, "y": 0 }, "blurRadius": 20, "spreadRadius": -5 }],
+    "bento": [
+      { "color": "0x40000000", "offset": { "x": 0, "y": 20 }, "blurRadius": 50, "spreadRadius": -10 },
+      { "color": "0x0D000000", "offset": { "x": 0, "y": 0 }, "blurRadius": 0, "spreadRadius": 1 },
+      { "color": "0x266D2180", "offset": { "x": 0, "y": 0 }, "blurRadius": 60, "spreadRadius": -20 }
+    ],
+    "cardGlass": [
+      { "color": "0x26000000", "offset": { "x": 0, "y": 4 }, "blurRadius": 20, "spreadRadius": -4 },
+      { "color": "0x14FFFFFF", "offset": { "x": 0, "y": 0 }, "blurRadius": 0, "spreadRadius": 1 }
+    ],
+    "tileGlow": [{ "color": "0x4D6D2180", "offset": { "x": 0, "y": 0 }, "blurRadius": 30, "spreadRadius": -10 }]
+  },
+  "transitions": {
+    "fast": "150ms ease",
+    "normal": "200ms ease",
+    "slow": "300ms ease"
+  },
+  "breakpoints": {
+    "sm": "640px",
+    "md": "768px",
+    "lg": "1024px",
+    "xl": "1280px",
+    "2xl": "1536px"
+  },
+  "zIndex": {
+    "hide": -1,
+    "base": 0,
+    "dropdown": 100,
+    "sticky": 200,
+    "fixed": 300,
+    "modalBackdrop": 400,
+    "modal": 500,
+    "popover": 600,
+    "tooltip": 700,
+    "toast": 800
+  }
+}

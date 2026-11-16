@@ -1,0 +1,110 @@
+digraph ERD {
+  rankdir=LR;
+  graph [fontname="Helvetica", nodesep=0.6, ranksep=1.0, bgcolor="white"];
+  node [shape=plaintext, fontname="Helvetica"];
+  edge [fontname="Helvetica", fontsize=10, color="#6B6458"];
+
+  USERS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>USERS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  user_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    name</TD></TR>
+      <TR><TD ALIGN="LEFT">    email</TD></TR>
+      <TR><TD ALIGN="LEFT">    password</TD></TR>
+      <TR><TD ALIGN="LEFT">    role</TD></TR>
+      <TR><TD ALIGN="LEFT">    contact_number</TD></TR>
+    </TABLE>
+  >];
+
+  ADVISER_PROFILES [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>ADVISER_PROFILES</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK,FK  adviser_id</TD></TR>
+      <TR><TD ALIGN="LEFT">       specialization_tags</TD></TR>
+      <TR><TD ALIGN="LEFT">       certifications</TD></TR>
+      <TR><TD ALIGN="LEFT">       max_capacity</TD></TR>
+      <TR><TD ALIGN="LEFT">       current_advisee_count</TD></TR>
+    </TABLE>
+  >];
+
+  APPLICATIONS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>APPLICATIONS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  application_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  student_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  adviser_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    topic_brief</TD></TR>
+      <TR><TD ALIGN="LEFT">    status</TD></TR>
+      <TR><TD ALIGN="LEFT">    date_submitted</TD></TR>
+    </TABLE>
+  >];
+
+  AVAILABILITY [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>AVAILABILITY</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  availability_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  adviser_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    day_of_week</TD></TR>
+      <TR><TD ALIGN="LEFT">    specific_date</TD></TR>
+      <TR><TD ALIGN="LEFT">    start_time</TD></TR>
+      <TR><TD ALIGN="LEFT">    end_time</TD></TR>
+    </TABLE>
+  >];
+
+  BOOKINGS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>BOOKINGS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  booking_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  application_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  student_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  adviser_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    slot_date</TD></TR>
+      <TR><TD ALIGN="LEFT">    start_time</TD></TR>
+      <TR><TD ALIGN="LEFT">    end_time</TD></TR>
+      <TR><TD ALIGN="LEFT">    status</TD></TR>
+    </TABLE>
+  >];
+
+  PROGRESS_LOGS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>PROGRESS_LOGS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  log_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  booking_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    stage_status</TD></TR>
+      <TR><TD ALIGN="LEFT">    remarks</TD></TR>
+      <TR><TD ALIGN="LEFT">    date_logged</TD></TR>
+    </TABLE>
+  >];
+
+  RATINGS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>RATINGS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  rating_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  booking_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    score</TD></TR>
+      <TR><TD ALIGN="LEFT">    feedback_text</TD></TR>
+    </TABLE>
+  >];
+
+  NOTIFICATIONS [label=<
+    <TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" COLOR="#1B2A4A">
+      <TR><TD BGCOLOR="#1B2A4A" ALIGN="CENTER"><FONT COLOR="white"><B>NOTIFICATIONS</B></FONT></TD></TR>
+      <TR><TD ALIGN="LEFT">PK  notification_id</TD></TR>
+      <TR><TD ALIGN="LEFT">FK  user_id</TD></TR>
+      <TR><TD ALIGN="LEFT">    message</TD></TR>
+      <TR><TD ALIGN="LEFT">    type</TD></TR>
+      <TR><TD ALIGN="LEFT">    date_sent</TD></TR>
+    </TABLE>
+  >];
+
+  USERS -> ADVISER_PROFILES [label="1 : 1\n(if role=adviser)"];
+  USERS -> APPLICATIONS [label="1 : many\n(as student)"];
+  ADVISER_PROFILES -> APPLICATIONS [label="1 : many"];
+  ADVISER_PROFILES -> AVAILABILITY [label="1 : many"];
+  APPLICATIONS -> BOOKINGS [label="1 : many\n(once approved)"];
+  USERS -> BOOKINGS [label="1 : many\n(as student)", style=dashed];
+  ADVISER_PROFILES -> BOOKINGS [label="1 : many", style=dashed];
+  BOOKINGS -> PROGRESS_LOGS [label="1 : many"];
+  BOOKINGS -> RATINGS [label="1 : 1"];
+  USERS -> NOTIFICATIONS [label="1 : many"];
+}
