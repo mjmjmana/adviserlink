@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Notice } from "@/components/ui/alert";
-import { BookOpenCheck, GraduationCap, UserRound, X } from "lucide-react";
+import { BookOpenCheck, Eye, EyeOff, GraduationCap, UserRound, X } from "lucide-react";
 import { ADVISER_DEPARTMENTS } from "@/constants/adviserDepartments";
 import AuthShell from "./AuthShell";
 
@@ -35,6 +35,8 @@ export default function Register() {
   const [roleSwitchDirection, setRoleSwitchDirection] = useState("right");
   const [profilePhoto, setProfilePhoto] = useState("");
   const [photoError, setPhotoError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { register, handleSubmit, formState: { errors, isSubmitting }, watch, setValue } = useForm({
     resolver: zodResolver(registerSchema),
@@ -185,12 +187,22 @@ export default function Register() {
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" {...register("password")} required minLength={8} autoComplete="new-password" placeholder="••••••••" aria-invalid={errors.password ? "true" : "false"} />
+                <div className="relative">
+                  <Input id="password" type={showPassword ? "text" : "password"} className="pr-11" {...register("password")} required minLength={8} autoComplete="new-password" placeholder="••••••••" aria-invalid={errors.password ? "true" : "false"} />
+                  <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? "Hide password" : "Show password"} aria-pressed={showPassword} className="absolute inset-y-0 right-0 inline-flex items-center px-3 text-muted-foreground hover:text-foreground">
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 {errors.password && <p className="text-sm text-destructive" role="alert">{errors.password.message}</p>}
               </div>
               <div className="grid gap-1.5">
                 <Label htmlFor="confirm">Confirm password</Label>
-                <Input id="confirm" type="password" {...register("confirm_password")} required autoComplete="new-password" placeholder="••••••••" aria-invalid={errors.confirm_password ? "true" : "false"} />
+                <div className="relative">
+                  <Input id="confirm" type={showConfirmPassword ? "text" : "password"} className="pr-11" {...register("confirm_password")} required autoComplete="new-password" placeholder="••••••••" aria-invalid={errors.confirm_password ? "true" : "false"} />
+                  <button type="button" onClick={() => setShowConfirmPassword((visible) => !visible)} aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"} aria-pressed={showConfirmPassword} className="absolute inset-y-0 right-0 inline-flex items-center px-3 text-muted-foreground hover:text-foreground">
+                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
                 {errors.confirm_password && <p className="text-sm text-destructive" role="alert">{errors.confirm_password.message}</p>}
               </div>
             </div>

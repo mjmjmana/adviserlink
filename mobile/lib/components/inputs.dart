@@ -9,6 +9,7 @@ class AppInput extends StatefulWidget {
   final TextEditingController? controller;
   final TextInputType keyboardType;
   final bool obscureText;
+  final bool invalid;
   final bool enabled;
   final bool readOnly;
   final bool required;
@@ -31,6 +32,7 @@ class AppInput extends StatefulWidget {
     this.controller,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
+    this.invalid = false,
     this.enabled = true,
     this.readOnly = false,
     this.required = false,
@@ -59,10 +61,12 @@ class _AppInputState extends State<AppInput> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = FocusNode();
     _obscureText = widget.obscureText;
-    _focusNode.addListener(() => setState(() => _focused = _focusNode.hasFocus));
+    _focusNode
+        .addListener(() => setState(() => _focused = _focusNode.hasFocus));
   }
 
   @override
@@ -74,9 +78,13 @@ class _AppInputState extends State<AppInput> {
 
   @override
   Widget build(BuildContext context) {
-    final hasError = widget.error != null;
+    final hasError = widget.error != null || widget.invalid;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final disabled = !widget.enabled;
+    final passwordLabel =
+        widget.label?.toLowerCase().contains('confirm') == true
+            ? 'confirm password'
+            : 'password';
 
     List<BoxShadow>? boxShadow;
 
@@ -107,9 +115,15 @@ class _AppInputState extends State<AppInput> {
             padding: EdgeInsets.only(bottom: context.space2),
             child: Row(
               children: [
-                Text(widget.label!, style: context.textSm.copyWith(fontWeight: DesignTokens.weightSemibold, color: context.textColor)),
+                Text(widget.label!,
+                    style: context.textSm.copyWith(
+                        fontWeight: DesignTokens.weightSemibold,
+                        color: context.textColor)),
                 if (widget.required)
-                  Text(' *', style: context.textSm.copyWith(color: context.errorColor(), fontWeight: DesignTokens.weightBold)),
+                  Text(' *',
+                      style: context.textSm.copyWith(
+                          color: context.errorColor(),
+                          fontWeight: DesignTokens.weightBold)),
               ],
             ),
           ),
@@ -135,49 +149,78 @@ class _AppInputState extends State<AppInput> {
               onChanged: widget.onChanged,
               onFieldSubmitted: widget.onSubmitted,
               validator: widget.validator,
-              style: context.textBase.copyWith(color: context.textColor, letterSpacing: 0.1),
+              style: context.textBase
+                  .copyWith(color: context.textColor, letterSpacing: 0.1),
               decoration: InputDecoration(
                 hintText: widget.hint,
-                hintStyle: context.textBase.copyWith(color: context.textMuted.withValues(alpha: 0.6), letterSpacing: 0.1),
+                hintStyle: context.textBase.copyWith(
+                    color: context.textMuted.withValues(alpha: 0.6),
+                    letterSpacing: 0.1),
                 helperText: widget.helperText,
                 helperStyle: context.textSm.copyWith(color: context.textMuted),
                 errorText: widget.error,
-                errorStyle: context.textSm.copyWith(color: context.errorColor()),
+                errorStyle:
+                    context.textSm.copyWith(color: context.errorColor()),
                 counterText: '',
                 filled: true,
                 fillColor: disabled
-                    ? context.surfaceElevated.withValues(alpha: isDark ? 0.3 : 0.5)
+                    ? context.surfaceElevated
+                        .withValues(alpha: isDark ? 0.3 : 0.5)
                     : context.inputColor,
-                contentPadding: EdgeInsets.symmetric(horizontal: context.space4, vertical: context.space3),
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: context.space4, vertical: context.space3),
                 prefixIcon: widget.prefixIcon != null
-                    ? Icon(widget.prefixIcon, size: 20, color: _focused ? context.brandPrimary : context.textMuted.withValues(alpha: 0.7))
+                    ? Icon(widget.prefixIcon,
+                        size: 20,
+                        color: _focused
+                            ? context.brandPrimary
+                            : context.textMuted.withValues(alpha: 0.7))
                     : null,
                 suffixIcon: widget.suffixIcon != null
                     ? IconButton(
+                        tooltip: widget.obscureText
+                            ? '${_obscureText ? 'Show' : 'Hide'} $passwordLabel'
+                            : null,
                         icon: Icon(
-                          _obscureText && widget.obscureText ? Icons.visibility_off : widget.suffixIcon,
+                          _obscureText && widget.obscureText
+                              ? Icons.visibility_off
+                              : widget.suffixIcon,
                           size: 20,
-                          color: _focused ? context.brandPrimary : context.textMuted.withValues(alpha: 0.7),
+                          color: _focused
+                              ? context.brandPrimary
+                              : context.textMuted.withValues(alpha: 0.7),
                         ),
-                        onPressed: widget.onSuffixTap ?? () => setState(() => _obscureText = !_obscureText),
+                        onPressed: widget.onSuffixTap ??
+                            () => setState(() => _obscureText = !_obscureText),
                       )
                     : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
-                  borderSide: BorderSide(color: context.borderColor, width: 1.5),
+                  borderSide:
+                      BorderSide(color: context.borderColor, width: 1.5),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
                   borderSide: BorderSide(
-                      color: disabled ? context.borderColor.withValues(alpha: 0.4) : context.borderColor, width: 1.5),
+                      color: hasError
+                          ? context.errorColor()
+                          : disabled
+                              ? context.borderColor.withValues(alpha: 0.4)
+                              : context.borderColor,
+                      width: 1.5),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
-                  borderSide: BorderSide(color: context.brandPrimary, width: 2),
+                  borderSide: BorderSide(
+                      color: hasError
+                          ? context.errorColor()
+                          : context.brandPrimary,
+                      width: 2),
                 ),
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
-                  borderSide: BorderSide(color: context.errorColor(), width: 1.5),
+                  borderSide:
+                      BorderSide(color: context.errorColor(), width: 1.5),
                 ),
                 focusedErrorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
@@ -185,7 +228,9 @@ class _AppInputState extends State<AppInput> {
                 ),
                 disabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(context.radius2xl),
-                  borderSide: BorderSide(color: context.borderColor.withValues(alpha: 0.4), width: 1.5),
+                  borderSide: BorderSide(
+                      color: context.borderColor.withValues(alpha: 0.4),
+                      width: 1.5),
                 ),
               ),
             ),
@@ -233,7 +278,10 @@ class AppTextarea extends StatelessWidget {
         if (label != null)
           Padding(
             padding: EdgeInsets.only(bottom: context.space2),
-            child: Text(label!, style: context.textSm.copyWith(fontWeight: DesignTokens.weightSemibold, color: context.textColor)),
+            child: Text(label!,
+                style: context.textSm.copyWith(
+                    fontWeight: DesignTokens.weightSemibold,
+                    color: context.textColor)),
           ),
         TextFormField(
           controller: controller,
@@ -242,10 +290,13 @@ class AppTextarea extends StatelessWidget {
           maxLines: maxLines,
           onChanged: onChanged,
           validator: validator,
-          style: context.textBase.copyWith(color: context.textColor, letterSpacing: 0.1),
+          style: context.textBase
+              .copyWith(color: context.textColor, letterSpacing: 0.1),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: context.textBase.copyWith(color: context.textMuted.withValues(alpha: 0.6), letterSpacing: 0.1),
+            hintStyle: context.textBase.copyWith(
+                color: context.textMuted.withValues(alpha: 0.6),
+                letterSpacing: 0.1),
             helperText: helperText,
             helperStyle: context.textSm.copyWith(color: context.textMuted),
             errorText: error,
@@ -261,7 +312,11 @@ class AppTextarea extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
-              borderSide: BorderSide(color: disabled ? context.borderColor.withValues(alpha: 0.4) : context.borderColor, width: 1.5),
+              borderSide: BorderSide(
+                  color: disabled
+                      ? context.borderColor.withValues(alpha: 0.4)
+                      : context.borderColor,
+                  width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
@@ -277,7 +332,9 @@ class AppTextarea extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
-              borderSide: BorderSide(color: context.borderColor.withValues(alpha: 0.4), width: 1.5),
+              borderSide: BorderSide(
+                  color: context.borderColor.withValues(alpha: 0.4),
+                  width: 1.5),
             ),
           ),
         ),
@@ -321,17 +378,23 @@ class AppSelect<T> extends StatelessWidget {
         if (label != null)
           Padding(
             padding: EdgeInsets.only(bottom: context.space2),
-            child: Text(label!, style: context.textSm.copyWith(fontWeight: DesignTokens.weightSemibold, color: context.textColor)),
+            child: Text(label!,
+                style: context.textSm.copyWith(
+                    fontWeight: DesignTokens.weightSemibold,
+                    color: context.textColor)),
           ),
         DropdownButtonFormField<T>(
           value: value,
           items: items,
           onChanged: disabled ? null : onChanged,
           validator: validator,
-          style: context.textBase.copyWith(color: context.textColor, letterSpacing: 0.1),
+          style: context.textBase
+              .copyWith(color: context.textColor, letterSpacing: 0.1),
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: context.textBase.copyWith(color: context.textMuted.withValues(alpha: 0.6), letterSpacing: 0.1),
+            hintStyle: context.textBase.copyWith(
+                color: context.textMuted.withValues(alpha: 0.6),
+                letterSpacing: 0.1),
             helperText: helperText,
             helperStyle: context.textSm.copyWith(color: context.textMuted),
             errorText: error,
@@ -340,14 +403,19 @@ class AppSelect<T> extends StatelessWidget {
             fillColor: disabled
                 ? context.surfaceElevated.withValues(alpha: isDark ? 0.3 : 0.5)
                 : context.inputColor,
-            contentPadding: EdgeInsets.symmetric(horizontal: context.space4, vertical: context.space3),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: context.space4, vertical: context.space3),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
               borderSide: BorderSide(color: context.borderColor, width: 1.5),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
-              borderSide: BorderSide(color: disabled ? context.borderColor.withValues(alpha: 0.4) : context.borderColor, width: 1.5),
+              borderSide: BorderSide(
+                  color: disabled
+                      ? context.borderColor.withValues(alpha: 0.4)
+                      : context.borderColor,
+                  width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
@@ -363,12 +431,15 @@ class AppSelect<T> extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(context.radius2xl),
-              borderSide: BorderSide(color: context.borderColor.withValues(alpha: 0.4), width: 1.5),
+              borderSide: BorderSide(
+                  color: context.borderColor.withValues(alpha: 0.4),
+                  width: 1.5),
             ),
           ),
           dropdownColor: context.surfaceElevated,
           icon: Icon(Icons.keyboard_arrow_down, color: context.textMuted),
-          selectedItemBuilder: (context) => items.map((item) => Text(item.value.toString())).toList(),
+          selectedItemBuilder: (context) =>
+              items.map((item) => Text(item.value.toString())).toList(),
         ),
       ],
     );

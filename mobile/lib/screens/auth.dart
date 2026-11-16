@@ -236,6 +236,7 @@ class _LandingScreenState extends State<LandingScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     _pages.dispose();
@@ -721,11 +722,13 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   final _email = TextEditingController();
   final _password = TextEditingController();
   String _error = '';
   String _notice = '';
   bool _busy = false;
+  bool _credentialError = false;
 
   @override
   void initState() {
@@ -734,17 +737,40 @@ class _LoginScreenState extends State<LoginScreen> {
     _notice = widget.notice ?? '';
   }
 
-  Future<void> _submit() async {
+  String? _validateEmail(String? value) {
+    final email = value?.trim() ?? '';
+    if (email.isEmpty) return 'Enter your email address.';
+    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+      return 'Enter a valid email address.';
+    }
+    return null;
+  }
+
+  void _clearLoginError(String _) {
+    if (!_credentialError && _error.isEmpty) return;
     setState(() {
       _error = '';
+      _credentialError = false;
+    });
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    setState(() {
+      _error = '';
+      _credentialError = false;
       _busy = true;
     });
     try {
       await Api.login(_email.text.trim(), _password.text);
       if (mounted) goHome(context);
     } catch (e) {
+      if (!mounted) return;
+      final message = e.toString();
       setState(() {
-        _error = e.toString();
+        _credentialError =
+            message.toLowerCase().contains('incorrect email or password');
+        _error = message;
         _busy = false;
       });
     }
@@ -769,46 +795,60 @@ class _LoginScreenState extends State<LoginScreen> {
         title: 'Welcome back',
         subtitle: 'Log in to continue to AdviserLink.',
         isRegister: false,
-        child:
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-          if (_notice.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(_notice,
-                  style: TextStyle(color: context.brandPrimary)),
+        child: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            if (_notice.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(_notice,
+                    style: TextStyle(color: context.brandPrimary)),
+              ),
+            if (_error.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child:
+                    Text(_error, style: TextStyle(color: context.errorColor())),
+              ),
+            AppInput(
+              controller: _email,
+              label: 'Email',
+              hint: 'Enter email',
+              keyboardType: TextInputType.emailAddress,
+              required: true,
+              invalid: _credentialError,
+              onChanged: _clearLoginError,
+              validator: _validateEmail,
             ),
-          if (_error.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child:
-                  Text(_error, style: TextStyle(color: context.errorColor())),
+            const SizedBox(height: 12),
+            AppInput(
+              controller: _password,
+              label: 'Password',
+              hint: 'Enter password',
+              obscureText: true,
+              suffixIcon: Icons.visibility_outlined,
+              required: true,
+              invalid: _credentialError,
+              onChanged: _clearLoginError,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Enter your password.'
+                  : null,
+              onSubmitted: (_) => _submit(),
             ),
-          AppInput(
-            controller: _email,
-            label: 'Email',
-            hint: 'Enter email',
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 12),
-          AppInput(
-            controller: _password,
-            label: 'Password',
-            hint: 'Enter password',
-            obscureText: true,
-            suffixIcon: Icons.visibility_outlined,
-            onSubmitted: (_) => _submit(),
-          ),
-          if (_error.toLowerCase().contains('verify'))
-            TextButton(
-              onPressed: _resendVerification,
-              child: const Text('Resend verification email'),
+            if (_error.toLowerCase().contains('verify'))
+              TextButton(
+                onPressed: _resendVerification,
+                child: const Text('Resend verification email'),
+              ),
+            const SizedBox(height: 16),
+            PrimaryButton(
+              onPressed: _busy ? null : _submit,
+              label: _busy ? 'Logging in…' : 'Log in',
             ),
-          const SizedBox(height: 16),
-          PrimaryButton(
-            onPressed: _busy ? null : _submit,
-            label: _busy ? 'Logging in…' : 'Log in',
-          ),
-        ]),
+          ]),
+        ),
       );
 }
 

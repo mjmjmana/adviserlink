@@ -45,7 +45,7 @@ async function send(path, { method = "GET", body, form, auth = true } = {}) {
 async function request(path, opts = {}) {
   const res = await send(path, opts);
   const data = await res.json().catch(() => ({}));
-  if (res.status === 401) {
+  if (res.status === 401 && opts.auth !== false) {
     clearAuth();
     if (typeof window !== "undefined") window.location.href = `${import.meta.env.BASE_URL}login`;
     throw new Error("Session expired. Please log in again.");

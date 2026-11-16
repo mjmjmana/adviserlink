@@ -254,4 +254,75 @@ void main() {
     expect(find.text('Log in'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('registration has independent password visibility buttons',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: buildLight(),
+      home: const RegisterScreen(),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byTooltip('Show password'), findsOneWidget);
+    expect(find.byTooltip('Show confirm password'), findsOneWidget);
+
+    await tester.ensureVisible(find.byTooltip('Show password'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Show password'));
+    await tester.pump();
+
+    expect(find.byTooltip('Hide password'), findsOneWidget);
+    expect(find.byTooltip('Show confirm password'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('login validates an empty email and password', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: buildLight(),
+      home: const LoginScreen(),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byType(PrimaryButton));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(PrimaryButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Enter your email address.'), findsOneWidget);
+    expect(find.text('Enter your password.'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('login password visibility button reveals the password',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      theme: buildLight(),
+      home: const LoginScreen(),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.byTooltip('Show password'));
+    await tester.pumpAndSettle();
+    expect(find.byTooltip('Show password'), findsOneWidget);
+    expect(
+      tester
+          .widgetList<EditableText>(find.byType(EditableText))
+          .last
+          .obscureText,
+      isTrue,
+    );
+
+    await tester.tap(find.byTooltip('Show password'));
+    await tester.pump();
+
+    expect(find.byTooltip('Hide password'), findsOneWidget);
+    expect(
+      tester
+          .widgetList<EditableText>(find.byType(EditableText))
+          .last
+          .obscureText,
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
+  });
 }
